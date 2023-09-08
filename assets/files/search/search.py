@@ -95,12 +95,12 @@ def genericSearchAlgo(container, problem, isUCS = False):
     """
     This is the generic solution to depthFirstSearch(problem),
         breathFirstSearch(problem) and UniformCostSearch(problem)
-    :param container: util.Stack() or util.Queue()
+    :param container: util.Stack() or util.Queue() or util.PriorityQueue()
     :param problem: searchProblem
     :param isUCS: True if the algo is uniform cost search
     :return: solution to the goal
     """
-    visitedSoFar = []  # fringe states already visited
+    visitedSoFar = set()  # fringe states already visited
     startState = problem.getStartState()
 
     if problem.isGoalState(startState):  # start state is the goal state
@@ -111,11 +111,11 @@ def genericSearchAlgo(container, problem, isUCS = False):
 
     while container.isEmpty:
         currState, path = container.pop()  # get the top of the state
-        if currState not in visitedSoFar:
-            visitedSoFar.append(currState)
+        if problem.isGoalState(currState):
+            return path
 
-            if problem.isGoalState(currState):  # goal reached
-                return path
+        if currState not in visitedSoFar:
+            visitedSoFar.add(currState)
 
             successors = problem.getSuccessors(currState)  # fringe of the current state
             for child, direction, cost in successors:
@@ -145,6 +145,7 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+
     util.raiseNotDefined()
 
 
