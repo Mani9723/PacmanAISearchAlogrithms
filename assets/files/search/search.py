@@ -91,33 +91,36 @@ def depthFirstSearch(problem):
     util.raiseNotDefined()
 
 
-def genericSearchAlgo(container, problem):
+def genericSearchAlgo(container, problem, isUCS = False):
     """
-    This is the generic solution to depthFirstSearch(problem) and breathFirstSearch(problem)
-
+    This is the generic solution to depthFirstSearch(problem),
+        breathFirstSearch(problem) and UniformCostSearch(problem)
     :param container: util.Stack() or util.Queue()
     :param problem: searchProblem
+    :param isUCS: True if the algo is uniform cost search
     :return: solution to the goal
     """
-    visitedSoFar = [];  # fringe states already visited
+    visitedSoFar = []  # fringe states already visited
     startState = problem.getStartState()
 
     if problem.isGoalState(startState):  # start state is the goal state
-        return [];
+        return []
 
-    container.push((startState, []))
+    if isUCS: container.push((startState, []), 0)
+    else : container.push((startState, []))
 
     while container.isEmpty:
-        currState, path = container.pop();  # get the top of the state
+        currState, path = container.pop()  # get the top of the state
         if currState not in visitedSoFar:
-            visitedSoFar.append(currState);
+            visitedSoFar.append(currState)
 
             if problem.isGoalState(currState):  # goal reached
-                return path;
+                return path
 
             successors = problem.getSuccessors(currState)  # fringe of the current state
-            for child in successors:
-                container.push((child[0], (path + [child[1]])));
+            for child, direction, cost in successors:
+                if isUCS: container.push((child,(path+[direction])), cost)
+                else: container.push((child,(path+[direction])))
 
 
 def breadthFirstSearch(problem):
@@ -129,6 +132,7 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    return genericSearchAlgo(util.PriorityQueue(),problem,True)
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
