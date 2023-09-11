@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -70,7 +71,8 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
     """
@@ -87,11 +89,11 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    return genericSearchAlgo(util.Stack(),problem)
+    return genericSearchAlgo(util.Stack(), problem)
     util.raiseNotDefined()
 
 
-def genericSearchAlgo(container, problem, isUCS = False):
+def genericSearchAlgo(container, problem):
     """
     This is the generic solution to depthFirstSearch(problem),
         breathFirstSearch(problem) and UniformCostSearch(problem)
@@ -106,8 +108,7 @@ def genericSearchAlgo(container, problem, isUCS = False):
     if problem.isGoalState(startState):  # start state is the goal state
         return []
 
-    if isUCS: container.push((startState, []), 0)
-    else : container.push((startState, []))
+    container.push((startState, []))
 
     while container.isEmpty:
         currState, path = container.pop()  # get the top of the state
@@ -119,21 +120,23 @@ def genericSearchAlgo(container, problem, isUCS = False):
 
             successors = problem.getSuccessors(currState)  # fringe of the current state
             for child, direction, cost in successors:
-                if isUCS: container.push((child,(path+[direction])), cost)
-                else: container.push((child,(path+[direction])))
+                container.push((child, (path + [direction])))
 
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    return genericSearchAlgo(util.Queue(),problem)
+    return genericSearchAlgo(util.Queue(), problem)
     util.raiseNotDefined()
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    return genericSearchAlgo(util.PriorityQueue(),problem,True)
+    return genericUcsAstarSearch(problem)
+
     util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -142,11 +145,41 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-
+    return genericUcsAstarSearch(problem,heuristic,True)
     util.raiseNotDefined()
+
+def genericUcsAstarSearch(problem, heuristic=nullHeuristic, astar = False):
+
+    priorityQueue = util.PriorityQueue()
+    costList = {}
+    visitedSoFar = set()  # fringe states already visited
+    startState = problem.getStartState()
+    if problem.isGoalState(startState):  # start state is the goal state
+        return []
+
+    priorityQueue.push((startState, [], 0), 0)
+    costList[startState] = 0
+
+    while priorityQueue.isEmpty:
+        currState, currPath, currCost = priorityQueue.pop()  # get the top of the state
+
+        if problem.isGoalState(currState):
+            return currPath
+
+        successors = problem.getSuccessors(currState)  # fringe of the current state
+        for child, childDirection, childCost in successors:
+            if child not in visitedSoFar:
+                if astar:
+                    priority = currCost + childCost + heuristic(child,problem)
+                else:
+                    priority = currCost + childCost
+                if not (child in costList.keys() and costList[child] <= priority):
+                    priorityQueue.push((child, (currPath + [childDirection]), currCost + childCost), priority)
+                    costList[child] = priority
 
 
 # Abbreviations
