@@ -166,7 +166,7 @@ def genericUcsAstarSearch(problem, heuristic=nullHeuristic, astar = False):
 
     while priorityQueue.isEmpty:
         currState, currPath, currCost = priorityQueue.pop()  # get the top of the state
-
+        visitedSoFar.add(currState)
         if problem.isGoalState(currState):
             return currPath
 
