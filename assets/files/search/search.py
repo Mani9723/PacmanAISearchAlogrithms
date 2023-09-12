@@ -103,7 +103,7 @@ def genericSearchAlgo(container, problem):
     :return: solution to the goal
     """
     visitedSoFar = set()  # fringe states already visited
-    startState = (problem.getStartState(),[],0)
+    startState = (problem.getStartState(),[])
 
     if problem.isGoalState(startState[0]):  # start state is the goal state
         return []

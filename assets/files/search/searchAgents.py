@@ -306,7 +306,8 @@ class CornersProblem(search.SearchProblem):
         """
         "*** YOUR CODE HERE ***"
         ## TODO THE GOAL IS IF THE AGENT HAS VISITED ALL OF THE CORNERS####
-        return len(state[1]) == 0
+
+        return not state[1]
         # util.raiseNotDefined()
 
     def getSuccessors(self, state):
@@ -364,14 +365,17 @@ def cornersHeuristic(state, problem):
     This function should always return a number that is a lower bound on the
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
-    """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
+     """
+    # corners = problem.corners # These are the corner coordinates
+    # walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
     "*** YOUR CODE HERE ***"
-    print(corners)
-    print(walls)
-    return 0 # Default to trivial solution
+    # The heuristic I choose for this problem is the distance from the current state
+    # to the farthest corner. uses manhattan distance
+
+    manhattanDistances = tuple(util.manhattanDistance(state[0],corner)
+                               for corner in list(state[1]))
+
+    return max(manhattanDistances) if len(manhattanDistances) != 0 else 0
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
