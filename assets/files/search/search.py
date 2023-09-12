@@ -122,13 +122,12 @@ def genericSearchAlgo(container, problem):
             for child, direction, cost in successors:
                 container.push((child, (path + [direction])))
 
-
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     return genericSearchAlgo(util.Queue(), problem)
 
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
 
 
 def uniformCostSearch(problem):
@@ -136,7 +135,7 @@ def uniformCostSearch(problem):
     "*** YOUR CODE HERE ***"
     return genericUcsAstarSearch(problem)
 
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
 
 
 def nullHeuristic(state, problem=None):
@@ -151,7 +150,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
     return genericUcsAstarSearch(problem,heuristic,True)
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
 
 def genericUcsAstarSearch(problem, heuristic=nullHeuristic, astar = False):
 
@@ -167,20 +166,18 @@ def genericUcsAstarSearch(problem, heuristic=nullHeuristic, astar = False):
 
     while priorityQueue.isEmpty:
         currState, currPath, currCost = priorityQueue.pop()  # get the top of the state
-        visitedSoFar.add(currState)
         if problem.isGoalState(currState):
             return currPath
 
-        successors = problem.getSuccessors(currState)  # fringe of the current state
-        for child, childDirection, childCost in successors:
-            if child not in visitedSoFar:
-                if astar:
-                    priority = currCost + childCost + heuristic(child,problem)
-                else:
-                    priority = currCost + childCost
-                if not (child in costList.keys() and costList[child] <= priority):
-                    priorityQueue.push((child, (currPath + [childDirection]), currCost + childCost), priority)
-                    costList[child] = priority
+        if currState not in visitedSoFar:
+            visitedSoFar.add(currState)
+
+            successors = problem.getSuccessors(currState)  # fringe of the current state
+            for child, childDirection, childCost in successors:
+                    priority = currCost + childCost + heuristic(child,problem) if astar else currCost + childCost
+                    if not (child in costList.keys() and costList[child] <= priority):
+                        priorityQueue.push((child, (currPath + [childDirection]), currCost + childCost), priority)
+                        costList[child] = priority
 
 
 # Abbreviations
