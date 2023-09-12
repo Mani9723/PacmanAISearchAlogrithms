@@ -289,20 +289,25 @@ class CornersProblem(search.SearchProblem):
         # in initializing the problem
         "*** YOUR CODE HERE ***"
 
+        self.startState = (self.startingPosition,self.corners)
+
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.startState
+        # util.raiseNotDefined()
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        ## TODO THE GOAL IS IF THE AGENT HAS VISITED ALL OF THE CORNERS####
+        return len(state[1]) == 0
+        # util.raiseNotDefined()
 
     def getSuccessors(self, state):
         """
@@ -319,12 +324,16 @@ class CornersProblem(search.SearchProblem):
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+            x,y = state[0]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
 
-            "*** YOUR CODE HERE ***"
+            if not self.walls[nextx][nexty]:
+                cornersLeft = []
+                for corner in state[1]:
+                    if corner != (nextx, nexty):
+                        cornersLeft.append(corner)
+                successors.append((((nextx, nexty), tuple(cornersLeft)), action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -360,6 +369,8 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+    print(corners)
+    print(walls)
     return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
@@ -508,8 +519,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         self.food = gameState.getFood()
 
         # Store info for the PositionSearchProblem (no need to change this)
-        self.walls = gameState.getWalls()
-        self.startState = gameState.getPacmanPosition()
+        self.walls = gameState.getWallsacmanPosition()
         self.costFn = lambda x: 1
         self._visited, self._visitedlist, self._expanded = {}, [], 0 # DO NOT CHANGE
 

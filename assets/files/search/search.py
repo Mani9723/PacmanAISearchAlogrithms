@@ -103,12 +103,12 @@ def genericSearchAlgo(container, problem):
     :return: solution to the goal
     """
     visitedSoFar = set()  # fringe states already visited
-    startState = problem.getStartState()
+    startState = (problem.getStartState(),[],0)
 
-    if problem.isGoalState(startState):  # start state is the goal state
+    if problem.isGoalState(startState[0]):  # start state is the goal state
         return []
 
-    container.push((startState, []))
+    container.push((startState[0], []))
 
     while container.isEmpty:
         currState, path = container.pop()  # get the top of the state
@@ -127,6 +127,7 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     return genericSearchAlgo(util.Queue(), problem)
+
     util.raiseNotDefined()
 
 
