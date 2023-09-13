@@ -208,7 +208,7 @@ class PriorityQueue:
 class PriorityQueueWithFunction(PriorityQueue):
     """
     Implements a priority queue with the same push/pop signature of the
-    Queue and the Stack classes. This is designed for drop-in replacement for
+    Queue and the Stack classes. This is designed for drop-in replacem~en`~t for
     those two classes. The caller has to provide a priority function, which
     extracts each item's priority.
     """
